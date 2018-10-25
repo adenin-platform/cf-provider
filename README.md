@@ -66,7 +66,7 @@ To call functions froa a Koa server we can just provide the following route in `
 ```js
 const routes = require('./index');
 
-// setup koa app
+// set up koa app
 
 app.use(async ctx => {
     const service = ctx.url.split('/')[1];
@@ -89,4 +89,4 @@ module.exports = async body => {
 
 It also allows for authentication with an API key if an environment variable `API_KEYS`, containing a `;` delimited set of keys, is set in the execution environment. The key can then be provided in the `x-api-key` request header.
 
-If neither this header nor the environment variable is set, authentication will not be required, unless otherwise configured within your cloud service settings.
+If neither this header nor the environment variable are set, authentication will not be required, unless otherwise configured within your cloud service settings.
