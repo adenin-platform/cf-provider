@@ -61,7 +61,7 @@ You can use the following function entry points for deployment to cloud provider
 
 Azure will automatically detect functions in your repo upon deployment and use the entry points we already specified in the `function.json` files.
 
-To call functions froa a Koa server we can just provide the following route in `app.js`:
+To call functions from a Koa server we can just provide the following route in `app.js`:
 
 ```js
 const routes = require('./index');
