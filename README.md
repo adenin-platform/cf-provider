@@ -51,18 +51,22 @@ provide(
 );
 ```
 
-The `exports` of your functions repo will now automatically be set to each of the function modules within your directory. You can now use the following entrypoints for deployment to cloud providers:
+Your functions repo will now be exporting each of your function modules, via the middleware required for the current execution environment. 
 
-**GCP**: <function_name>
+You can use the following function entry points for deployment to cloud providers:
 
-**AWS**: index.<function_name>
+**GCP**: _<function_name>_
+
+**AWS**: _index.<function_name>_
 
 Azure will automatically detect functions in your repo upon deployment and use the entry points we already specified in the `function.json` files.
 
-To add support to a Koa server we can just provide the following route:
+To call functions froa a Koa server we can just provide the following route in `app.js`:
 
 ```js
 const routes = require('./index');
+
+// setup koa app
 
 app.use(async ctx => {
     const service = ctx.url.split('/')[1];
@@ -84,3 +88,5 @@ module.exports = async body => {
 ```
 
 It also allows for authentication with an API key if an environment variable `API_KEYS`, containing a `;` delimited set of keys, is set in the execution environment. The key can then be provided in the `x-api-key` request header.
+
+If neither this header nor the environment variable is set, authentication will not be required, unless otherwise configured within your cloud service settings.
