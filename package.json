@@ -1,6 +1,6 @@
 {
   "name": "@adenin/cf-provider",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Return correct middleware for FaaS provider given module to export to and its directory",
   "repository": {
     "type": "git",
