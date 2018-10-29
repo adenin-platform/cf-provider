@@ -23,11 +23,8 @@ The module assumes your function repo to take the following structure:
 ├── myfunction
 |   ├── index.js
 |   └── function.json
-├── app.js
 └── index.js
 ```
-
-...where `app.js` is the optional local Koa server, and there may be one or more function folders, each named after the function itself. 
 
 The function's `function.json` file is an [Azure function configuration](https://github.com/Azure/azure-functions-host/wiki/function.json) which will require the following properties to be set (in addition to the bindings and other required properties):
 
@@ -46,9 +43,7 @@ Within `index.js`, you then simply need to do the following:
 const provide = require('@adenin/cf-provider');
 const { resolve } = require('path');
 
-provide(
-    exports, resolve('./')
-);
+provide(exports, resolve(__dirname));
 ```
 
 Your functions repo will now be exporting each of your function modules, via the middleware required for the current execution environment. 
@@ -61,7 +56,7 @@ You can use the following function entry points for deployment to cloud provider
 
 Azure will automatically detect functions in your repo upon deployment and use the entry points we already specified in the `function.json` files.
 
-To call functions from a Koa server we can just provide the following route in `app.js`:
+To call functions from a Koa server we can just provide the following route:
 
 ```js
 const routes = require('./index');
@@ -69,8 +64,10 @@ const routes = require('./index');
 // set up koa app
 
 app.use(async ctx => {
+    // Extract service name from request url
     const service = ctx.url.split('/')[1];
 
+    // Attempt to index into that service from the routes
     if (routes[service]) await routes[service](ctx);
 });
 ```
