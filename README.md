@@ -26,6 +26,8 @@ The module assumes your function repo to take the following structure:
 └── index.js
 ```
 
+If there is a directory in your function repo that does not contain a function, it should either be hidden (begin with `.`), or have its name prefixed with `_`.
+
 The function's `function.json` file is an [Azure function configuration](https://github.com/Azure/azure-functions-host/wiki/function.json) which will require the following properties to be set (in addition to the bindings and other required properties):
 
 ```json
