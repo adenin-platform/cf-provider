@@ -15,10 +15,12 @@ module.exports = (_exports, path) => {
             directory.lastIndexOf(sep) + 1, directory.length
         );
 
-        if (service != 'node_modules' && service.indexOf('_') == -1 && service != '.git') {
-            _exports[service] = provide(
-                require(directory)
-            );
+        if (service != 'node_modules' && 
+            service.chartAt(0) != '_' && 
+            service.chartAt(0) != '.') {
+                _exports[service] = provide(
+                    require(directory)
+                );
         }
     }
 
