@@ -8,10 +8,7 @@ module.exports = service => {
         const authorized = authenticate(context.req.headers);
 
         if (!authorized) {
-            logger.error({
-                message: 'Unauthorized request',
-                headers: context.req.headers
-            });
+            logger.error('Unauthorized request\n' + JSON.stringify(context.req.headers));
 
             context.res.status = 401;
             context.res.body = {

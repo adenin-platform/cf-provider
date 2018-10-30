@@ -6,10 +6,7 @@ module.exports = service => {
         const authorized = authenticate(ctx.header);
 
         if (!authorized) {
-            logger.error({
-                message: 'Unauthorized request',
-                headers: ctx.header
-            });
+            logger.error('Unauthorized request\n' + JSON.stringify(ctx.header));
 
             ctx.status = 401;
             ctx.body = {
