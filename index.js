@@ -16,8 +16,8 @@ module.exports = (_exports, path) => {
         );
 
         if (service != 'node_modules' && 
-            service.chartAt(0) != '_' && 
-            service.chartAt(0) != '.') {
+            service.charAt(0) != '_' && 
+            service.charAt(0) != '.') {
                 _exports[service] = provide(
                     require(directory)
                 );

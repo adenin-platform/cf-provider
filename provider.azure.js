@@ -1,3 +1,4 @@
+const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
 module.exports = service => {
@@ -7,7 +8,7 @@ module.exports = service => {
         const authorized = authenticate(context.req.headers);
 
         if (!authorized) {
-            console.error({
+            logger.error({
                 message: 'Unauthorized request',
                 headers: context.req.headers
             });
