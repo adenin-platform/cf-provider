@@ -1,3 +1,4 @@
+const logger = require('logger');
 
 module.exports = header => {
     if (header['x-api-key']) {
@@ -17,7 +18,7 @@ module.exports = header => {
     } 
         
     if (!process.env.API_KEYS) {
-        console.info('Auth not configured on client or server');
+        logger.info('Auth not configured on client or server');
             
         return true;
     }
