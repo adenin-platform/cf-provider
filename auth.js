@@ -18,7 +18,7 @@ module.exports = header => {
     } 
         
     if (!process.env.API_KEYS) {
-        logger.info('Auth not configured on client or server');
+        logger.warn('Auth not configured on client or server');
             
         return true;
     }
