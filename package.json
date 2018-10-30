@@ -12,6 +12,6 @@
   "author": "olliejm",
   "main": "index.js",
   "dependencies": {
-    "@adenin/cf-logger": "^1.0.0"
+    "@adenin/cf-logger": "^1.1.2"
   }
 }
