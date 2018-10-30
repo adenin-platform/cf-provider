@@ -1,4 +1,4 @@
-const logger = require('logger');
+const logger = require('@adenin/cf-logger');
 
 module.exports = header => {
     if (header['x-api-key']) {
