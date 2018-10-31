@@ -6,7 +6,7 @@ module.exports = service => {
         const authorized = authenticate(req.headers);
 
         if (!authorized) {
-            logger.error('Unauthorized request\n' + JSON.stringify(req.headers));
+            logger.error('Unauthorized request\n' + JSON.stringify(req.headers, null, 4));
 
             res.status(401).send({
                 error: 'Access key missing or invalid'

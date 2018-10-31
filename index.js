@@ -15,12 +15,11 @@ module.exports = (_exports, path) => {
             directory.lastIndexOf(sep) + 1, directory.length
         );
 
-        if (service != 'node_modules' && 
-            service.charAt(0) != '_' && 
-            service.charAt(0) != '.') {
-                _exports[service] = provide(
-                    require(directory)
-                );
+        if (service != 'node_modules' &&
+            service.charAt(0) != '_' && service.charAt(0) != '.') {
+            _exports[service] = provide(
+                 require(directory)
+            );
         }
     }
 
