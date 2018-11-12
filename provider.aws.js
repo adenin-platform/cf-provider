@@ -6,7 +6,10 @@ module.exports = service => {
         const authorized = authenticate(event.headers);
 
         if (!authorized) {
-            logger.error('Unauthorized request\n' + JSON.stringify(event.headers, null, 4));
+            logger.error(
+                'Unauthorized request\n' +
+                    JSON.stringify(event.headers, null, 4)
+            );
 
             return {
                 isBase64Encoded: false,
@@ -20,11 +23,7 @@ module.exports = service => {
         return {
             isBase64Encoded: false,
             statusCode: 200,
-            body: JSON.stringify(
-                await service(
-                    JSON.parse(event.body)
-                )
-            )
+            body: JSON.stringify(await service(JSON.parse(event.body)))
         };
     };
 };

@@ -6,16 +6,16 @@ module.exports = service => {
         const authorized = authenticate(ctx.header);
 
         if (!authorized) {
-            logger.error('Unauthorized request\n' + JSON.stringify(ctx.header, null, 4));
+            logger.error(
+                'Unauthorized request\n' + JSON.stringify(ctx.header, null, 4)
+            );
 
             ctx.status = 401;
             ctx.body = {
                 error: 'Access key missing or invalid'
             };
         } else {
-            ctx.body = await service(
-                ctx.request.body
-            );
+            ctx.body = await service(ctx.request.body);
         }
     };
 };

@@ -8,16 +8,17 @@ module.exports = service => {
         const authorized = authenticate(context.req.headers);
 
         if (!authorized) {
-            logger.error('Unauthorized request\n' + JSON.stringify(context.req.headers, null, 4));
+            logger.error(
+                'Unauthorized request\n' +
+                    JSON.stringify(context.req.headers, null, 4)
+            );
 
             context.res.status = 401;
             context.res.body = {
                 error: 'Access key missing or invalid'
             };
         } else {
-            context.res.body = await service(
-                context.req.body
-            );
+            context.res.body = await service(context.req.body);
         }
     };
 };

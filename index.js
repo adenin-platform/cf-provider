@@ -12,14 +12,16 @@ module.exports = (_exports, path) => {
         const directory = directories[i];
 
         const service = directory.substring(
-            directory.lastIndexOf(sep) + 1, directory.length
+            directory.lastIndexOf(sep) + 1,
+            directory.length
         );
 
-        if (service != 'node_modules' &&
-            service.charAt(0) != '_' && service.charAt(0) != '.') {
-            _exports[service] = provide(
-                 require(directory)
-            );
+        if (
+            service != 'node_modules' &&
+            service.charAt(0) != '_' &&
+            service.charAt(0) != '.'
+        ) {
+            _exports[service] = provide(require(directory));
         }
     }
 
@@ -27,7 +29,7 @@ module.exports = (_exports, path) => {
         if (process.env.GCP_PROJECT) {
             return require('./provider.gcp')(service);
         }
-                
+
         if (process.env.AWS_EXECUTION_ENV) {
             return require('./provider.aws')(service);
         }

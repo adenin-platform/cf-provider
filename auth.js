@@ -15,11 +15,11 @@ module.exports = header => {
         }
 
         return false;
-    } 
-        
+    }
+
     if (!process.env.API_KEYS) {
         logger.warn('Auth not configured on client or server');
-            
+
         return true;
     }
 
