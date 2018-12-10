@@ -1,11 +1,13 @@
-const { lstatSync, readdirSync } = require('fs');
-const { join, sep } = require('path');
+'use strict';
 
-const isDirectory = source => lstatSync(source).isDirectory();
+const {lstatSync, readdirSync} = require('fs');
+const {join, sep} = require('path');
+
+const isDirectory = (source) => lstatSync(source).isDirectory();
 
 module.exports = (_exports, path) => {
     const directories = readdirSync(path)
-        .map(name => join(path, name))
+        .map((name) => join(path, name))
         .filter(isDirectory);
 
     for (let i = 0; i < directories.length; i++) {
@@ -17,9 +19,9 @@ module.exports = (_exports, path) => {
         );
 
         if (
-            service != 'node_modules' &&
-            service.charAt(0) != '_' &&
-            service.charAt(0) != '.'
+            service !== 'node_modules' &&
+            service.charAt(0) !== '_' &&
+            service.charAt(0) !== '.'
         ) {
             _exports[service] = provide(require(directory));
         }

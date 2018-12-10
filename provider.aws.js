@@ -1,8 +1,10 @@
+'use strict';
+
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = service => {
-    return async event => {
+module.exports = (service) => {
+    return async (event) => {
         const authorized = authenticate(event.headers);
 
         if (!authorized) {
@@ -20,10 +22,14 @@ module.exports = service => {
             };
         }
 
+        const activity = JSON.parse(event.body);
+
+        await service(activity);
+
         return {
             isBase64Encoded: false,
             statusCode: 200,
-            body: JSON.stringify(await service(JSON.parse(event.body)))
+            body: JSON.stringify(activity)
         };
     };
 };

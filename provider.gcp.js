@@ -1,7 +1,9 @@
+'use strict';
+
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = service => {
+module.exports = (service) => {
     return async (req, res) => {
         const authorized = authenticate(req.headers);
 
@@ -14,7 +16,11 @@ module.exports = service => {
                 error: 'Access key missing or invalid'
             });
         } else {
-            res.send(await service(req.body));
+            const activity = req.body;
+
+            await service(activity);
+
+            res.send(activity);
         }
     };
 };

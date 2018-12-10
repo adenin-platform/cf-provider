@@ -1,9 +1,12 @@
+/* eslint-disable no-console */
+'use strict';
+
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = service => {
-    return async context => {
-        map_console(context);
+module.exports = (service) => {
+    return async (context) => {
+        mapConsole(context);
 
         const authorized = authenticate(context.req.headers);
 
@@ -18,12 +21,16 @@ module.exports = service => {
                 error: 'Access key missing or invalid'
             };
         } else {
-            context.res.body = await service(context.req.body);
+            const activity = context.req.body;
+
+            await service(activity);
+
+            context.res.body = activity;
         }
     };
 };
 
-function map_console(context) {
+function mapConsole(context) {
     console.log = context.log;
     console.info = context.log.info;
     console.error = context.log.error;
