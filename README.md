@@ -74,18 +74,16 @@ app.use(async ctx => {
 });
 ```
 
-The exported middleware will pass the request body on to your function file, which should return the intended response body. The function file should export a single `async` function in the following manner:
+The exported middleware will pass the request body on to your function file, which should mutate the object it receives (the request body) - this will automatically become the response body when function execution ends (no need to `return` the object). The function file should export a single `async` function similar to the following:
 
 ```js
 module.exports = async body => {
-    var result;
-
-    // Do something
-
-    return result;
+    if (body.request === 'Say hello') {
+        body.response = 'Hello world!';
+    }
 }
 ```
 
 It also allows for authentication with an API key if an environment variable `API_KEYS`, containing a `;` delimited set of keys, is set in the execution environment. The key can then be provided in the `x-api-key` request header.
 
-If neither this header nor the environment variable are set, authentication will not be required, unless otherwise configured within your cloud service settings.
+If neither this header nor the environment variable are set, authentication will not be required, unless otherwise configured within your cloud service's internal settings. Requests made when authorization is disabled will however be logged.
