@@ -4,7 +4,7 @@
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = (service) => {
+module.exports = (services) => {
     return async (context) => {
         mapConsole(context);
 
@@ -20,12 +20,30 @@ module.exports = (service) => {
             context.res.body = {
                 error: 'Access key missing or invalid'
             };
-        } else {
+        } else if (
+            context.req.params &&
+            context.req.params.service &&
+            services.has(context.req.params.service)
+        ) {
+            const service = require(
+                services.get(context.req.params.service)
+            );
+
             const activity = context.req.body;
 
             await service(activity);
 
             context.res.body = activity;
+        } else {
+            logger.error(
+                'Invalid request\n' +
+                    JSON.stringify(context.req, null, 4)
+            );
+
+            context.res.status = 404;
+            context.res.body = {
+                error: 'Requested service not found'
+            };
         }
     };
 };

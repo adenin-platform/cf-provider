@@ -1,45 +1,27 @@
 'use strict';
 
-const {lstatSync, readdirSync} = require('fs');
-const {join, sep} = require('path');
-
-const isDirectory = (source) => lstatSync(source).isDirectory();
+const {readdirSync} = require('fs');
+const {join} = require('path');
 
 module.exports = (_exports, path) => {
-    const directories = readdirSync(path)
-        .map((name) => join(path, name))
-        .filter(isDirectory);
+    const services = new Map();
 
-    for (let i = 0; i < directories.length; i++) {
-        const directory = directories[i];
-
-        const service = directory.substring(
-            directory.lastIndexOf(sep) + 1,
-            directory.length
+    readdirSync(path)
+        .map(
+            (name) => services.set(
+                name.substring(
+                    0, name.lastIndexOf('.')),
+                join(path, name)
+            )
         );
 
-        if (
-            service !== 'node_modules' &&
-            service.charAt(0) !== '_' &&
-            service.charAt(0) !== '.'
-        ) {
-            _exports[service] = provide(require(directory));
-        }
-    }
-
-    function provide(service) {
-        if (process.env.GCP_PROJECT) {
-            return require('./provider.gcp')(service);
-        }
-
-        if (process.env.AWS_EXECUTION_ENV) {
-            return require('./provider.aws')(service);
-        }
-
-        if (process.env.AzureWebJobsStorage) {
-            return require('./provider.azure')(service);
-        }
-
-        return require('./provider.local')(service);
+    if (process.env.GCP_PROJECT) {
+        _exports.function = require('./provider.gcp')(services);
+    } else if (process.env.AWS_EXECUTION_ENV) {
+        _exports.function = require('./provider.aws')(services);
+    } else if (process.env.AzureWebJobsStorage) {
+        _exports.function = require('./provider.azure')(services);
+    } else {
+        _exports.function = require('./provider.local')(services);
     }
 };
