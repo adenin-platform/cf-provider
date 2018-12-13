@@ -1,8 +1,8 @@
 # Cloud Function Provider
 
-This module returns middleware / entrypoints for FaaS providers Microsoft Azure, AWS Lambda, and Google Cloud functions. 
+This module returns entrypoints for FaaS providers Microsoft Azure, AWS Lambda, and Google Cloud functions. 
 
-It detects execution environment at runtime before returning the appropriate entrypoint for that environment, therefore enabling you to abstract away provider-specific code and have solely the function business logic in your cloud function repo. 
+It detects execution environment at runtime before returning the appropriate entrypoint for that environment, therefore enabling you to abstract away provider-specific code and implement only the business logic in your project repository, which will work for all 3 providers without modification.
 
 By default, if neither of the 3 providers are detected, it will return a Koa middleware that allows you to execute your cloud functions in a local environment by calling the returned function from a Koa server.
 
@@ -20,12 +20,14 @@ The module assumes your function repo to take the following structure:
 
 ```
 .
-├── functions
-|   ├── myfunction.js
-|   ├── anotherfunction.js
+├── activities
+|   ├── myactivity.js
+|   ├── anotheractivity.js
 |   └── function.json
 └── index.js
 ```
+
+Each `.js` file within the `/activities` folder will then be accessible through the exported cloud function middleware by name. Helper scripts used by these files should reside in a seperate folder or the project root, to avoid inadvertently exposing them to the function endpoint also. 
 
 The function's `function.json` file is an [Azure function configuration](https://github.com/Azure/azure-functions-host/wiki/function.json) which will require the following properties to be set (in addition to the bindings and other required properties):
 
@@ -41,7 +43,7 @@ The function's `function.json` file is an [Azure function configuration](https:/
             "methods": [
                 "post"
             ],
-            "route": "test2/{service}"
+            "route": "{service}"
         },
         {
             "type": "http",
@@ -58,12 +60,11 @@ Within `index.js`, you then simply need to do the following:
 
 ```js
 const provide = require('@adenin/cf-provider');
-const { resolve } = require('path');
 
-provide(exports, resolve(__dirname + '/functions'));
+provide(exports);
 ```
 
-Your functions repo will now be exporting an entrypoint for all the scripts contained in `/functions`, via the middleware required for the current execution environment. 
+Your functions repo will now be exporting an entrypoint to access all the scripts contained in `/activities`, which will be correct for the current execution environment detected. The activity to be executed is specified by a mandatory path parameter `/:activity` to be appended to the endpoint of the deployed cloud function.
 
 You can use the following function entry points for deployment to cloud providers:
 
@@ -85,7 +86,7 @@ const router = new Router();
 
 const controller = require('./index');
 
-router.post('/:service', async (ctx) => {
+router.post('/:activity', async (ctx) => {
     await controller.function(ctx);
 });
 
@@ -97,12 +98,12 @@ app
     .listen(3000);
 ```
 
-The exported middleware will pass the request body on to your function file, which should mutate the object it receives (the request body) - this will automatically become the response body when function execution ends (no need to `return` the object).
+The exported middleware accepts POST requests, and will pass the request body on to your activity script, which can mutate the request body - this will automatically become the response body when function execution ends (no need to `return` it).
 
 The function file should export a single `async` function similar to the following:
 
 ```js
-module.exports = async body => {
+module.exports = async (body) => {
     if (body.request === 'Say hello') {
         body.response = 'Hello world!';
     }
