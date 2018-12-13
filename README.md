@@ -100,7 +100,7 @@ app
 
 The exported middleware accepts POST requests, and will pass the request body on to your activity script, which can mutate the request body - this will automatically become the response body when function execution ends (no need to `return` it).
 
-The function file should export a single `async` function similar to the following:
+The activity script should export a single `async` function similar to the following:
 
 ```js
 module.exports = async (body) => {
