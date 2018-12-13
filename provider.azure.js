@@ -4,7 +4,7 @@
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = (services) => {
+module.exports = (activities) => {
     return async (context) => {
         mapConsole(context);
 
@@ -22,18 +22,18 @@ module.exports = (services) => {
             };
         } else if (
             context.req.params &&
-            context.req.params.service &&
-            services.has(context.req.params.service)
+            context.req.params.activity &&
+            activities.has(context.req.params.activity)
         ) {
-            const service = require(
-                services.get(context.req.params.service)
+            const activity = require(
+                activities.get(context.req.params.activity)
             );
 
-            const activity = context.req.body;
+            const body = context.req.body;
 
-            await service(activity);
+            await activity(body);
 
-            context.res.body = activity;
+            context.res.body = body;
         } else {
             logger.error(
                 'Invalid request\n' +
@@ -42,7 +42,7 @@ module.exports = (services) => {
 
             context.res.status = 404;
             context.res.body = {
-                error: 'Requested service not found'
+                error: 'Requested activity not found'
             };
         }
     };

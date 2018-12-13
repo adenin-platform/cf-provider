@@ -3,7 +3,7 @@
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = (services) => {
+module.exports = (activities) => {
     return async (req, res) => {
         const authorized = authenticate(req.headers);
 
@@ -17,20 +17,20 @@ module.exports = (services) => {
                 error: 'Access key missing or invalid'
             });
         } else {
-            const serviceName = req.path.substring(
+            const activityName = req.path.substring(
                 req.path.lastIndexOf('/') + 1, req.path.length
             );
 
-            if (services.has(serviceName)) {
-                const service = require(
-                    services.get(serviceName)
+            if (activities.has(activityName)) {
+                const activity = require(
+                    activities.get(activityName)
                 );
 
-                const activity = req.body;
+                const body = req.body;
 
-                await service(activity);
+                await activity(body);
 
-                res.send(activity);
+                res.send(body);
             } else {
                 logger.error(
                     'Invalid request\n' +
@@ -38,7 +38,7 @@ module.exports = (services) => {
                 );
 
                 res.status(404).send({
-                    error: 'Requested service not found'
+                    error: 'Requested activity not found'
                 });
             }
         }

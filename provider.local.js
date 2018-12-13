@@ -3,7 +3,7 @@
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = (services) => {
+module.exports = (activities) => {
     return async (ctx) => {
         const authorized = authenticate(ctx.header);
 
@@ -18,15 +18,18 @@ module.exports = (services) => {
             };
         } else if (
             ctx.params &&
-            ctx.params.service &&
-            services.has(ctx.params.service)
+            ctx.params.activity &&
+            activities.has(ctx.params.activity)
         ) {
-            const service = require(services.get(ctx.params.service));
-            const activity = ctx.request.body;
+            const activity = require(
+                activities.get(ctx.params.activity)
+            );
 
-            await service(activity);
+            const body = ctx.request.body;
 
-            ctx.body = activity;
+            await activity(body);
+
+            ctx.body = body;
         } else {
             logger.error(
                 'Invalid request\n' +
@@ -35,7 +38,7 @@ module.exports = (services) => {
 
             ctx.status = 404;
             ctx.body = {
-                error: 'Requested service not found'
+                error: 'Requested activity not found'
             };
         }
     };

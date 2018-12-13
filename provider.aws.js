@@ -3,7 +3,7 @@
 const logger = require('@adenin/cf-logger');
 const authenticate = require('./auth');
 
-module.exports = (services) => {
+module.exports = (activities) => {
     return async (event) => {
         const authorized = authenticate(event.headers);
 
@@ -24,21 +24,21 @@ module.exports = (services) => {
 
         if (
             event.pathParameters &&
-            event.pathParameters.service &&
-            services.has(event.pathParameters.service)
+            event.pathParameters.activity &&
+            activities.has(event.pathParameters.activity)
         ) {
-            const service = require(
-                services.get(event.pathParameters.service)
+            const activity = require(
+                activities.get(event.pathParameters.activity)
             );
 
-            const activity = JSON.parse(event.body);
+            const body = JSON.parse(event.body);
 
-            await service(activity);
+            await activity(body);
 
             return {
                 isBase64Encoded: false,
                 statusCode: 200,
-                body: JSON.stringify(activity)
+                body: JSON.stringify(body)
             };
         }
 
@@ -51,7 +51,7 @@ module.exports = (services) => {
             isBase64Encoded: false,
             statusCode: 404,
             body: JSON.stringify({
-                error: 'Requested service not found'
+                error: 'Requested activity not found'
             })
         };
     };

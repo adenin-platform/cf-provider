@@ -1,27 +1,29 @@
 'use strict';
 
 const {readdirSync} = require('fs');
-const {join} = require('path');
+const {join, sep} = require('path');
 
-module.exports = (_exports, path) => {
-    const services = new Map();
+module.exports = (_exports) => {
+    const path = module.parent.filename.substring(
+        0, module.parent.filename.lastIndexOf(sep)
+    ) + sep + 'activities';
 
-    readdirSync(path)
-        .map(
-            (name) => services.set(
-                name.substring(
-                    0, name.lastIndexOf('.')),
-                join(path, name)
-            )
-        );
+    const activities = new Map();
+
+    readdirSync(path).map(
+        (name) => activities.set(
+            name.substring(0, name.lastIndexOf('.')),
+            join(path, name)
+        )
+    );
 
     if (process.env.GCP_PROJECT) {
-        _exports.function = require('./provider.gcp')(services);
+        _exports.function = require('./provider.gcp')(activities);
     } else if (process.env.AWS_EXECUTION_ENV) {
-        _exports.function = require('./provider.aws')(services);
+        _exports.function = require('./provider.aws')(activities);
     } else if (process.env.AzureWebJobsStorage) {
-        _exports.function = require('./provider.azure')(services);
+        _exports.function = require('./provider.azure')(activities);
     } else {
-        _exports.function = require('./provider.local')(services);
+        _exports.function = require('./provider.local')(activities);
     }
 };
