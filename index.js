@@ -8,14 +8,21 @@ module.exports = (_exports) => {
         0, module.parent.filename.lastIndexOf(sep)
     ) + sep + 'activities';
 
+    const files = readdirSync(path);
     const activities = new Map();
 
-    readdirSync(path).map(
-        (name) => activities.set(
-            name.substring(0, name.lastIndexOf('.')),
-            join(path, name)
-        )
-    );
+    for (let i = 0; i < files.length; i++) {
+        if (
+            files[i].indexOf('.json') === -1 &&
+            files[i].indexOf('.js') !== -1
+        ) {
+            const name = files[i].substring(
+                0, files[i].lastIndexOf('.')
+            );
+
+            activities.set(name, join(path, files[i]));
+        }
+    }
 
     if (process.env.GCP_PROJECT) {
         _exports.function = require('./provider.gcp')(activities);
