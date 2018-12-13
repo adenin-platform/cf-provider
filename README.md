@@ -43,7 +43,7 @@ The function's `function.json` file is an [Azure function configuration](https:/
             "methods": [
                 "post"
             ],
-            "route": "{service}"
+            "route": "{activity}"
         },
         {
             "type": "http",
