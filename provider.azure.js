@@ -36,8 +36,8 @@ module.exports = (activities) => {
             context.res.body = body;
         } else {
             logger.error(
-                'Invalid request\n' +
-                    JSON.stringify(context.req, null, 4)
+                'Invalid activity request\n' +
+                    JSON.stringify(context.req.params, null, 4)
             );
 
             context.res.status = 404;

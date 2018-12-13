@@ -33,7 +33,7 @@ module.exports = (activities) => {
                 res.send(body);
             } else {
                 logger.error(
-                    'Invalid request\n' +
+                    'Invalid activity request\n' +
                         JSON.stringify(req.path, null, 4)
                 );
 

@@ -32,8 +32,8 @@ module.exports = (activities) => {
             ctx.body = body;
         } else {
             logger.error(
-                'Invalid request\n' +
-                    JSON.stringify(ctx.req, null, 4)
+                'Invalid activity request\n' +
+                    JSON.stringify(ctx.params, null, 4)
             );
 
             ctx.status = 404;

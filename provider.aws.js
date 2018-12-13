@@ -43,8 +43,8 @@ module.exports = (activities) => {
         }
 
         logger.error(
-            'Invalid request\n' +
-                JSON.stringify(event, null, 4)
+            'Invalid activity request\n' +
+                JSON.stringify(event.pathParameters, null, 4)
         );
 
         return {
