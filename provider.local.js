@@ -8,33 +8,21 @@ module.exports = (activities) => {
         const authorized = authenticate(ctx.header);
 
         if (!authorized) {
-            logger.error(
-                'Unauthorized request\n' + JSON.stringify(ctx.header, null, 4)
-            );
+            logger.error('Unauthorized request\n' + JSON.stringify(ctx.header, null, 4));
 
             ctx.status = 401;
             ctx.body = {
                 error: 'Access key missing or invalid'
             };
-        } else if (
-            ctx.params &&
-            ctx.params.activity &&
-            activities.has(ctx.params.activity)
-        ) {
-            const activity = require(
-                activities.get(ctx.params.activity)
-            );
-
+        } else if (ctx.params && ctx.params.activity && activities.has(ctx.params.activity)) {
+            const activity = require(activities.get(ctx.params.activity));
             const body = ctx.request.body;
 
             await activity(body);
 
             ctx.body = body;
         } else {
-            logger.error(
-                'Invalid activity request\n' +
-                    JSON.stringify(ctx.params, null, 4)
-            );
+            logger.error('Invalid activity request\n' + JSON.stringify(ctx.params, null, 4));
 
             ctx.status = 404;
             ctx.body = {

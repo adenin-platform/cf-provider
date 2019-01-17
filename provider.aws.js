@@ -8,10 +8,7 @@ module.exports = (activities) => {
         const authorized = authenticate(event.headers);
 
         if (!authorized) {
-            logger.error(
-                'Unauthorized request\n' +
-                    JSON.stringify(event.headers, null, 4)
-            );
+            logger.error('Unauthorized request\n' + JSON.stringify(event.headers, null, 4));
 
             return {
                 isBase64Encoded: false,
@@ -22,15 +19,8 @@ module.exports = (activities) => {
             };
         }
 
-        if (
-            event.pathParameters &&
-            event.pathParameters.activity &&
-            activities.has(event.pathParameters.activity)
-        ) {
-            const activity = require(
-                activities.get(event.pathParameters.activity)
-            );
-
+        if (event.pathParameters && event.pathParameters.activity && activities.has(event.pathParameters.activity)) {
+            const activity = require(activities.get(event.pathParameters.activity));
             const body = JSON.parse(event.body);
 
             await activity(body);
@@ -42,10 +32,7 @@ module.exports = (activities) => {
             };
         }
 
-        logger.error(
-            'Invalid activity request\n' +
-                JSON.stringify(event.pathParameters, null, 4)
-        );
+        logger.error('Invalid activity request\n' + JSON.stringify(event.pathParameters, null, 4));
 
         return {
             isBase64Encoded: false,

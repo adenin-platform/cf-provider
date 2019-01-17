@@ -21,13 +21,14 @@ The module assumes your function repo to take the following structure:
 ```
 .
 ├── activities
+|   ├── common/
 |   ├── myactivity.js
 |   ├── anotheractivity.js
 |   └── function.json
 └── index.js
 ```
 
-Each `.js` file within the `/activities` folder will then be accessible through the exported cloud function middleware by name. Helper scripts used by these files should reside in a seperate folder or the project root, to avoid inadvertently exposing them to the function endpoint also. 
+Each `.js` file within the `/activities` folder will then be accessible through the exported cloud function middleware by name. Helper scripts used by these files should reside in the subfolder `/common`, to avoid inadvertently exposing them to the function endpoint also. 
 
 The function's `function.json` file is an [Azure function configuration](https://github.com/Azure/azure-functions-host/wiki/function.json) which will require the following properties to be set (in addition to the bindings and other required properties):
 
@@ -52,7 +53,7 @@ The function's `function.json` file is an [Azure function configuration](https:/
         }
     ],
     "scriptFile": "../index.js",
-    "entryPoint": "function"
+    "entryPoint": "activities"
 }
 ```
 
@@ -68,9 +69,9 @@ Your functions repo will now be exporting an entrypoint to access all the script
 
 You can use the following function entry points for deployment to cloud providers:
 
-**GCP**: _function_
+**GCP**: _activities_
 
-**AWS**: _index.function_
+**AWS**: _index.activities_
 
 Azure function entrypoint is already configured in `function.json`.
 
@@ -84,10 +85,10 @@ const bodyParser = require('koa-bodyparser');
 const app = new Koa();
 const router = new Router();
 
-const controller = require('./index');
+const index = require('./index');
 
 router.post('/:activity', async (ctx) => {
-    await controller.function(ctx);
+    await index.activities(ctx);
 });
 
 // set up koa app
