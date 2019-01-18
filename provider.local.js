@@ -14,8 +14,8 @@ module.exports = (activities) => {
             ctx.body = {
                 error: 'Access key missing or invalid'
             };
-        } else if (ctx.params && ctx.params.activity && activities.has(ctx.params.activity)) {
-            const activity = require(activities.get(ctx.params.activity));
+        } else if (ctx.params && ctx.params.activity && activities.has(ctx.params.activity.toLowerCase())) {
+            const activity = require(activities.get(ctx.params.activity.toLowerCase()));
             const body = ctx.request.body;
 
             await activity(body);

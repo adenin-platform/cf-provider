@@ -16,8 +16,8 @@ module.exports = (activities) => {
         } else {
             const activityName = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length);
 
-            if (activities.has(activityName)) {
-                const activity = require(activities.get(activityName));
+            if (activities.has(activityName.toLowerCase())) {
+                const activity = require(activities.get(activityName.toLowerCase()));
                 const body = req.body;
 
                 await activity(body);

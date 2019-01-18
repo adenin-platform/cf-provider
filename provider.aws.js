@@ -19,8 +19,9 @@ module.exports = (activities) => {
             };
         }
 
-        if (event.pathParameters && event.pathParameters.activity && activities.has(event.pathParameters.activity)) {
-            const activity = require(activities.get(event.pathParameters.activity));
+        if (event.pathParameters && event.pathParameters.activity &&
+            activities.has(event.pathParameters.activity.toLowerCase())) {
+            const activity = require(activities.get(event.pathParameters.activity.toLowerCase()));
             const body = JSON.parse(event.body);
 
             await activity(body);

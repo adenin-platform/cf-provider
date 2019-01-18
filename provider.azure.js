@@ -17,8 +17,9 @@ module.exports = (activities) => {
             context.res.body = {
                 error: 'Access key missing or invalid'
             };
-        } else if (context.req.params && context.req.params.activity && activities.has(context.req.params.activity)) {
-            const activity = require(activities.get(context.req.params.activity));
+        } else if (context.req.params && context.req.params.activity &&
+            activities.has(context.req.params.activity.toLowerCase())) {
+            const activity = require(activities.get(context.req.params.activity.toLowerCase()));
             const body = context.req.body;
 
             await activity(body);
