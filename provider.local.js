@@ -15,12 +15,16 @@ module.exports = (activities) => {
                 error: 'Access key missing or invalid'
             };
         } else if (ctx.params && ctx.params.activity && activities.has(ctx.params.activity.toLowerCase())) {
-            const activity = require(activities.get(ctx.params.activity.toLowerCase()));
-            const body = ctx.request.body;
+            if (ctx.params.activity.toLowerCase() === '_info') {
+                ctx.body = activities.get('_info');
+            } else {
+                const activity = require(activities.get(ctx.params.activity.toLowerCase()));
+                const body = ctx.request.body;
 
-            await activity(body);
+                await activity.main(body);
 
-            ctx.body = body;
+                ctx.body = body;
+            }
         } else {
             logger.error('Invalid activity request\n' + JSON.stringify(ctx.params, null, 4));
 

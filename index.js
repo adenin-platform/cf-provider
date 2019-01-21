@@ -9,14 +9,20 @@ module.exports = (_exports) => {
     const files = readdirSync(path);
     const activities = new Map();
 
+    const info = {};
+
     // loop through the activities folder, if .js file, map its name to its path in the activities map
     for (let i = 0; i < files.length; i++) {
         if (files[i].indexOf('.json') === -1 && files[i].indexOf('.js') !== -1) {
             const name = files[i].substring(0, files[i].lastIndexOf('.'));
 
+            info[name] = require(join(path, files[i]))._info();
+
             activities.set(name.toLowerCase(), join(path, files[i]));
         }
     }
+
+    activities.set('_info', info);
 
     if (process.env.GCP_PROJECT) {
         _exports.activities = require('./provider.gcp')(activities);
