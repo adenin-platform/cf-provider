@@ -104,10 +104,19 @@ The exported middleware accepts POST requests, and will pass the request body on
 The activity script should export a single `async` function similar to the following:
 
 ```js
-module.exports = async (body) => {
-    if (body.request === 'Say hello') {
-        body.response = 'Hello world!';
+module.exports = async (activity) => {
+    if (activity.Request.Data === 'Say hello') {
+        activity.Response.Data = 'Hello world!';
     }
+}
+```
+
+The module will enforce that the body has the valid structure for an adenin activity object, that is that it contains the following root nodes:
+
+```json
+{
+    "Request": {},
+    "Context": {}
 }
 ```
 

@@ -5,7 +5,6 @@ const {join, sep} = require('path');
 
 module.exports = (_exports) => {
     const path = module.parent.filename.substring(0, module.parent.filename.lastIndexOf(sep)) + sep + 'activities';
-
     const files = readdirSync(path);
     const activities = new Map();
 

@@ -6,29 +6,54 @@ const authenticate = require('./auth');
 module.exports = (activities) => {
     return async (req, res) => {
         const authorized = authenticate(req.headers);
+        const body = req.body;
 
         if (!authorized) {
-            logger.error('Unauthorized request\n' + JSON.stringify(req.headers, null, 4));
+            logger.error('Unauthorized request');
 
-            res.status(401).send({
-                error: 'Access key missing or invalid'
-            });
+            body.Response = {
+                ErrorCode: 401,
+                Data: {
+                    ErrorText: 'Access key missing or invalid'
+                }
+            };
+
+            res.status(401).send(body);
+        } else if (!body.Request || !body.Context) {
+            logger.error('Invalid request body');
+
+            body.Response = {
+                ErrorCode: 400,
+                Data: {
+                    ErrorText: 'Activity body structure is invalid'
+                }
+            };
+
+            res.status(400).send(body);
         } else {
             const activityName = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length);
 
             if (activities.has(activityName.toLowerCase())) {
                 const activity = require(activities.get(activityName.toLowerCase()));
-                const body = req.body;
+
+                if (!body.Response) {
+                    body.Response = {};
+                }
 
                 await activity(body);
 
-                res.send(body);
+                res.status(200).send(body);
             } else {
-                logger.error('Invalid activity request\n' + JSON.stringify(req.path, null, 4));
+                logger.error('Invalid activity requested');
 
-                res.status(404).send({
-                    error: 'Requested activity not found'
-                });
+                body.Response = {
+                    ErrorCode: 404,
+                    Data: {
+                        ErrorText: 'Requested activity not found'
+                    }
+                };
+
+                res.status(404).send(body);
             }
         }
     };

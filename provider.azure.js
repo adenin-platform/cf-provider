@@ -9,30 +9,53 @@ module.exports = (activities) => {
         mapConsole(context);
 
         const authorized = authenticate(context.req.headers);
+        const body = context.req.body;
+        const params = context.req.params;
 
         if (!authorized) {
-            logger.error('Unauthorized request\n' + JSON.stringify(context.req.headers, null, 4));
+            logger.error('Unauthorized request');
+
+            body.Response = {
+                ErrorCode: 401,
+                Data: {
+                    ErrorText: 'Access key missing or invalid'
+                }
+            };
 
             context.res.status = 401;
-            context.res.body = {
-                error: 'Access key missing or invalid'
+        } else if (!body.Request || !body.Context) {
+            logger.error('Invalid request body');
+
+            body.Response = {
+                ErrorCode: 400,
+                Data: {
+                    ErrorText: 'Activity body structure is invalid'
+                }
             };
-        } else if (context.req.params && context.req.params.activity &&
-            activities.has(context.req.params.activity.toLowerCase())) {
-            const activity = require(activities.get(context.req.params.activity.toLowerCase()));
-            const body = context.req.body;
+
+            context.res.status = 400;
+        } else if (params && params.activity && activities.has(params.activity.toLowerCase())) {
+            const activity = require(activities.get(params.activity.toLowerCase()));
+
+            if (!body.Response) {
+                body.Response = {};
+            }
 
             await activity(body);
-
-            context.res.body = body;
         } else {
-            logger.error('Invalid activity request\n' + JSON.stringify(context.req.params, null, 4));
+            logger.error('Invalid activity requested');
+
+            body.Response = {
+                ErrorCode: 404,
+                Data: {
+                    ErrorText: 'Requested activity not found'
+                }
+            };
 
             context.res.status = 404;
-            context.res.body = {
-                error: 'Requested activity not found'
-            };
         }
+
+        context.res.body = body;
     };
 };
 
