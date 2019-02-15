@@ -5,6 +5,14 @@ const authenticate = require('./auth');
 
 module.exports = (activities) => {
     return async (ctx) => {
+        if (ctx.params && ctx.params.activity && ctx.params.activity.toLowerCase() === 'keepalive') {
+            ctx.body = {
+                date: new Date().toISOString()
+            };
+
+            return;
+        }
+
         const authorized = authenticate(ctx.header);
         const body = ctx.request.body;
 

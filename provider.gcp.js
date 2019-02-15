@@ -5,6 +5,14 @@ const authenticate = require('./auth');
 
 module.exports = (activities) => {
     return async (req, res) => {
+        const activityName = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length).toLowerCase();
+
+        if (activityName === 'keepalive') {
+            res.status(200).send({
+                date: new Date().toISOString()
+            });
+        }
+
         const authorized = authenticate(req.headers);
         const body = req.body;
 
@@ -31,10 +39,8 @@ module.exports = (activities) => {
 
             res.status(400).send(body);
         } else {
-            const activityName = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length);
-
-            if (activities.has(activityName.toLowerCase())) {
-                const activity = require(activities.get(activityName.toLowerCase()));
+            if (activities.has(activityName)) {
+                const activity = require(activities.get(activityName));
 
                 if (!body.Response) {
                     body.Response = {};

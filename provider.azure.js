@@ -8,9 +8,18 @@ module.exports = (activities) => {
     return async (context) => {
         mapConsole(context);
 
+        const params = context.req.params;
+
+        if (params && params.activity && params.activity.toLowerCase() === 'keepalive') {
+            context.res.body = {
+                date: new Date().toISOString()
+            };
+
+            return;
+        }
+
         const authorized = authenticate(context.req.headers);
         const body = context.req.body;
-        const params = context.req.params;
 
         if (!authorized) {
             logger.error('Unauthorized request');

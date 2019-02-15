@@ -5,6 +5,18 @@ const authenticate = require('./auth');
 
 module.exports = (activities) => {
     return async (event) => {
+        const pathParameters = event.pathParameters;
+
+        if (pathParameters && pathParameters.activity && pathParameters.activity.toLowerCase() === 'keepalive') {
+            return {
+                isBase64Encoded: false,
+                statusCode: 200,
+                body: JSON.stringify({
+                    date: new Date().toISOString()
+                })
+            };
+        }
+
         const authorized = authenticate(event.headers);
         const body = JSON.parse(event.body);
 
@@ -41,8 +53,6 @@ module.exports = (activities) => {
                 body: JSON.stringify(body)
             };
         }
-
-        const pathParameters = event.pathParameters;
 
         if (pathParameters && pathParameters.activity && activities.has(pathParameters.activity.toLowerCase())) {
             const activity = require(activities.get(pathParameters.activity.toLowerCase()));
