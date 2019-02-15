@@ -1,13 +1,13 @@
 {
   "name": "@adenin/cf-provider",
   "version": "2.3.0",
-  "description": "Return correct middleware for FaaS provider given module to export to and its directory",
+  "description": "Detect current serverless function environment and return correct middleware",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NowAssistant/cf-provider"
+    "url": "https://github.com/adenin-platform/cf-provider"
   },
   "bugs": {
-    "url": "https://github.com/NowAssistant/cf-provider/issues"
+    "url": "https://github.com/adenin-platform/cf-provider/issues"
   },
   "author": "olliejm",
   "main": "index.js",
