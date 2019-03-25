@@ -1,6 +1,8 @@
 'use strict';
 
-const logger = require('@adenin/cf-logger');
+global.logger = require('@adenin/cf-logger');
+
+const {makeGlobal} = require('@adenin/cf-activity');
 const authenticate = require('./auth');
 
 module.exports = (activities) => {
@@ -32,7 +34,7 @@ module.exports = (activities) => {
 
       return {
         isBase64Encoded: false,
-        statusCode: 401,
+        statusCode: body.Response.ErrorCode,
         body: JSON.stringify(body)
       };
     }
@@ -49,7 +51,7 @@ module.exports = (activities) => {
 
       return {
         isBase64Encoded: false,
-        statusCode: 400,
+        statusCode: body.Response.ErrorCode,
         body: JSON.stringify(body)
       };
     }
@@ -58,8 +60,12 @@ module.exports = (activities) => {
       const activity = require(activities.get(pathParameters.activity.toLowerCase()));
 
       if (!body.Response) {
-        body.Response = {};
+        body.Response = {
+          Data: {}
+        };
       }
+
+      makeGlobal(body);
 
       await activity(body);
 
@@ -81,7 +87,7 @@ module.exports = (activities) => {
 
     return {
       isBase64Encoded: false,
-      statusCode: 404,
+      statusCode: body.Response.ErrorCode,
       body: JSON.stringify(body)
     };
   };

@@ -12,6 +12,7 @@
   "author": "olliejm",
   "main": "index.js",
   "dependencies": {
-    "@adenin/cf-logger": "^1.5.1"
+    "@adenin/cf-activity": "^1.6.1",
+    "@adenin/cf-logger": "^1.6.0"
   }
 }

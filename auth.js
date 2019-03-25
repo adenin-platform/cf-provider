@@ -1,7 +1,5 @@
 'use strict';
 
-const logger = require('@adenin/cf-logger');
-
 module.exports = (header) => {
   if (header['x-api-key']) {
     if (!process.env.API_KEYS) {

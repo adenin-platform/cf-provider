@@ -1,13 +1,15 @@
 'use strict';
 
-const logger = require('@adenin/cf-logger');
+global.logger = require('@adenin/cf-logger');
+
+const {makeGlobal} = require('@adenin/cf-activity');
 const authenticate = require('./auth');
 
 module.exports = (activities) => {
   return async (req, res) => {
-    const activityName = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length).toLowerCase();
+    const name = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length).toLowerCase();
 
-    if (activityName === 'keepalive') {
+    if (name === 'keepalive') {
       res.status(200).send({
         date: new Date().toISOString()
       });
@@ -39,12 +41,16 @@ module.exports = (activities) => {
 
       res.status(400).send(body);
     } else {
-      if (activities.has(activityName)) {
-        const activity = require(activities.get(activityName));
+      if (activities.has(name)) {
+        const activity = require(activities.get(name));
 
         if (!body.Response) {
-          body.Response = {};
+          body.Response = {
+            Data: {}
+          };
         }
+
+        makeGlobal(body);
 
         await activity(body);
 

@@ -1,6 +1,8 @@
 'use strict';
 
-const logger = require('@adenin/cf-logger');
+global.logger = require('@adenin/cf-logger');
+
+const {makeGlobal} = require('@adenin/cf-activity');
 const authenticate = require('./auth');
 
 module.exports = (activities) => {
@@ -25,8 +27,6 @@ module.exports = (activities) => {
           ErrorText: 'Access key missing or invalid'
         }
       };
-
-      ctx.status = 401;
     } else if (!body.Request || !body.Context) {
       logger.error('Invalid request body');
 
@@ -36,14 +36,16 @@ module.exports = (activities) => {
           ErrorText: 'Activity body structure is invalid'
         }
       };
-
-      ctx.status = 400;
     } else if (ctx.params && ctx.params.activity && activities.has(ctx.params.activity.toLowerCase())) {
       const activity = require(activities.get(ctx.params.activity.toLowerCase()));
 
       if (!body.Response) {
-        body.Response = {};
+        body.Response = {
+          Data: {}
+        };
       }
+
+      makeGlobal(body);
 
       await activity(body);
     } else {
@@ -55,10 +57,9 @@ module.exports = (activities) => {
           ErrorText: 'Requested activity not found'
         }
       };
-
-      ctx.status = 404;
     }
 
+    ctx.status = body.Response.ErrorCode || 200;
     ctx.body = body;
   };
 };
