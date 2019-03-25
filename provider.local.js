@@ -1,6 +1,9 @@
 'use strict';
 
-global.logger = require('@adenin/cf-logger');
+if (!global.logger) {
+  // in case server did not use it, or did not make it global
+  global.logger = require('@adenin/cf-logger');
+}
 
 const {makeGlobal} = require('@adenin/cf-activity');
 const authenticate = require('./auth');
@@ -27,7 +30,7 @@ module.exports = (activities) => {
           ErrorText: 'Access key missing or invalid'
         }
       };
-    } else if (!body.Request || !body.Context) {
+    } else if (!body.Request || !body.Context || !body.Context.connector) {
       logger.error('Invalid request body');
 
       body.Response = {

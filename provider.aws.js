@@ -39,7 +39,7 @@ module.exports = (activities) => {
       };
     }
 
-    if (!body.Request || !body.Context) {
+    if (!body.Request || !body.Context || !body.Context.connector) {
       logger.error('Invalid request body');
 
       body.Response = {

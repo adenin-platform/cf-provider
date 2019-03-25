@@ -29,7 +29,7 @@ module.exports = (activities) => {
       };
 
       res.status(401).send(body);
-    } else if (!body.Request || !body.Context) {
+    } else if (!body.Request || !body.Context || !body.Context.connector) {
       logger.error('Invalid request body');
 
       body.Response = {
