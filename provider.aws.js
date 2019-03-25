@@ -2,6 +2,7 @@
 
 global.logger = require('@adenin/cf-logger');
 
+const {resolve} = require('path');
 const {makeGlobal} = require('@adenin/cf-activity');
 const authenticate = require('./auth');
 
@@ -39,7 +40,7 @@ module.exports = (activities) => {
       };
     }
 
-    if (!body.Request || !body.Context || !body.Context.connector) {
+    if (!body.Request || !body.Context) {
       logger.error('Invalid request body');
 
       body.Response = {
@@ -59,11 +60,12 @@ module.exports = (activities) => {
     if (pathParameters && pathParameters.activity && activities.has(pathParameters.activity.toLowerCase())) {
       const activity = require(activities.get(pathParameters.activity.toLowerCase()));
 
-      if (!body.Response) {
-        body.Response = {
-          Data: {}
-        };
-      }
+      if (!body.Request.Query) body.Request.Query = {};
+      if (!body.Context.connector) body.Context.connector = {};
+      if (!body.Response) body.Response = {};
+      if (!body.Response.Data) body.Response.Data = {};
+
+      body.Context.ScriptFolder = resolve('./activities');
 
       makeGlobal(body);
 

@@ -3,6 +3,7 @@
 
 global.logger = require('@adenin/cf-logger');
 
+const {resolve} = require('path');
 const {makeGlobal} = require('@adenin/cf-activity');
 const authenticate = require('./auth');
 
@@ -32,7 +33,7 @@ module.exports = (activities) => {
           ErrorText: 'Access key missing or invalid'
         }
       };
-    } else if (!body.Request || !body.Context || !body.Context.connector) {
+    } else if (!body.Request || !body.Context) {
       logger.error('Invalid request body');
 
       body.Response = {
@@ -44,11 +45,12 @@ module.exports = (activities) => {
     } else if (params && params.activity && activities.has(params.activity.toLowerCase())) {
       const activity = require(activities.get(params.activity.toLowerCase()));
 
-      if (!body.Response) {
-        body.Response = {
-          Data: {}
-        };
-      }
+      if (!body.Request.Query) body.Request.Query = {};
+      if (!body.Context.connector) body.Context.connector = {};
+      if (!body.Response) body.Response = {};
+      if (!body.Response.Data) body.Response.Data = {};
+
+      body.Context.ScriptFolder = resolve('./activities');
 
       makeGlobal(body);
 
