@@ -2,16 +2,12 @@
 
 module.exports = (header) => {
   if (header['x-api-key']) {
-    if (!process.env.API_KEYS) {
-      return false;
-    }
+    if (!process.env.API_KEYS) return false;
 
     const keys = process.env.API_KEYS.split(';');
 
     for (let i = 0; i < keys.length; i++) {
-      if (header['x-api-key'] === keys[i]) {
-        return true;
-      }
+      if (header['x-api-key'] === keys[i]) return true;
     }
 
     return false;
