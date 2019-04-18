@@ -6,7 +6,7 @@ if (!global.logger) {
 }
 
 const {resolve} = require('path');
-const {makeGlobal} = require('@adenin/cf-activity');
+const {initialize} = require('@adenin/cf-activity');
 const authenticate = require('./auth');
 
 module.exports = (activities) => {
@@ -50,7 +50,7 @@ module.exports = (activities) => {
 
       body.Context.ScriptFolder = resolve('./activities');
 
-      makeGlobal(body);
+      initialize(body);
 
       await activity(body);
     } else {
