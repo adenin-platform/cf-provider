@@ -99,14 +99,14 @@ app
     .listen(3000);
 ```
 
-The exported middleware accepts POST requests, and will assign the request body, and some helper methods, to a global object `Activity`, this will automatically become the response body when function execution ends (no need to `return` it).
+The exported middleware accepts POST requests, and the request body will be passed into each activity function - this object will automatically become the response body when function execution ends (no need to `return` it).
 
 The activity script should export a single `async` function similar to the following:
 
 ```js
-module.exports = async () => {
-    if (Activity.Request.Data === 'Say hello') {
-        Activity.Response.Data = 'Hello world!';
+module.exports = async (activity) => {
+    if (activity.Request.Data === 'Say hello') {
+        activity.Response.Data = 'Hello world!';
     }
 }
 ```
