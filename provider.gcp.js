@@ -56,6 +56,8 @@ module.exports = (activities) => {
 
         await activity(body);
 
+        body.Context.connector.ProxyServer = undefined; // avoid circular json error
+
         res.status(200).send(body);
       } else {
         logger.error('Invalid activity requested');

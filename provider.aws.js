@@ -71,6 +71,8 @@ module.exports = (activities) => {
 
       await activity(body);
 
+      body.Context.connector.ProxyServer = undefined; // avoid circular json error
+
       return {
         isBase64Encoded: false,
         statusCode: 200,
