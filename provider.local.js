@@ -51,7 +51,6 @@ module.exports = (activities) => {
       body.Context.ScriptFolder = resolve('./activities');
 
       initialize(body);
-
       await activity(body);
 
       body.Context.connector.ProxyServer = undefined; // avoid circular json error
