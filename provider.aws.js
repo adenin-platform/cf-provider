@@ -74,7 +74,7 @@ module.exports = (activities) => {
         logger.error(error);
 
         body.Response = {
-          ErrorCode: error.code,
+          ErrorCode: 500,
           Data: {
             ErrorText: error.message
           }
