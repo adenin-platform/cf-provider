@@ -16,7 +16,6 @@ module.exports = (activities) => {
   return async (ctx) => {
     if (ctx.params && ctx.params.activity && ctx.params.activity.toLowerCase() === 'keepalive') {
       ctx.body = {
-        success: true,
         date: new Date().toISOString()
       };
 

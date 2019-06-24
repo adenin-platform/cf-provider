@@ -18,7 +18,6 @@ module.exports = (activities) => {
 
     if (params && params.activity && params.activity.toLowerCase() === 'keepalive') {
       context.res.body = {
-        success: true,
         date: new Date().toISOString()
       };
 
