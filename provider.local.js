@@ -6,16 +6,25 @@ if (!global.logger) {
 }
 
 const {resolve} = require('path');
+
 const {initialize} = require('@adenin/cf-activity');
+
 const authenticate = require('./auth');
+const info = require('./info');
 
 module.exports = (activities) => {
   return async (ctx) => {
     if (ctx.params && ctx.params.activity && ctx.params.activity.toLowerCase() === 'keepalive') {
       ctx.body = {
+        success: true,
         date: new Date().toISOString()
       };
 
+      return;
+    }
+
+    if (ctx.params && ctx.params.activity && ctx.params.activity.toLowerCase() === '_info') {
+      ctx.body = await info();
       return;
     }
 

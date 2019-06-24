@@ -4,8 +4,11 @@
 global.logger = require('@adenin/cf-logger');
 
 const {resolve} = require('path');
+
 const {initialize} = require('@adenin/cf-activity');
+
 const authenticate = require('./auth');
+const info = require('./info');
 
 module.exports = (activities) => {
   return async (context) => {
@@ -15,9 +18,15 @@ module.exports = (activities) => {
 
     if (params && params.activity && params.activity.toLowerCase() === 'keepalive') {
       context.res.body = {
+        success: true,
         date: new Date().toISOString()
       };
 
+      return;
+    }
+
+    if (params && params.activity && params.activity.toLowerCase() === '_info') {
+      context.res.body = await info();
       return;
     }
 

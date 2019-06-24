@@ -3,8 +3,11 @@
 global.logger = require('@adenin/cf-logger');
 
 const {resolve} = require('path');
+
 const {initialize} = require('@adenin/cf-activity');
+
 const authenticate = require('./auth');
+const info = require('./info');
 
 module.exports = (activities) => {
   return async (req, res) => {
@@ -15,6 +18,8 @@ module.exports = (activities) => {
         date: new Date().toISOString()
       });
     }
+
+    if (name === '_info') res.status(200).send(await info());
 
     const authorized = authenticate(req.headers);
     const body = req.body;

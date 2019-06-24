@@ -3,8 +3,11 @@
 global.logger = require('@adenin/cf-logger');
 
 const {resolve} = require('path');
+
 const {initialize} = require('@adenin/cf-activity');
+
 const authenticate = require('./auth');
+const info = require('./info');
 
 module.exports = (activities) => {
   return async (event) => {
@@ -17,6 +20,14 @@ module.exports = (activities) => {
         body: JSON.stringify({
           date: new Date().toISOString()
         })
+      };
+    }
+
+    if (pathParameters && pathParameters.activity && pathParameters.activity.toLowerCase() === '_info') {
+      return {
+        isBase64Encoded: false,
+        statusCode: 200,
+        body: await info()
       };
     }
 
