@@ -79,7 +79,7 @@ module.exports = (activities) => {
       body.Context.ScriptFolder = resolve('./activities');
 
       try {
-        initialize(body);
+        await initialize(body);
         await activity(body);
       } catch (error) {
         logger.error(error);
