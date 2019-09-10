@@ -12,6 +12,8 @@ const info = require('./info');
 
 module.exports = (activities) => {
   return async (context) => {
+    process.env.HOST = context.req.headers.host;
+
     mapConsole(context);
 
     const params = context.req.params;

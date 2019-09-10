@@ -11,6 +11,8 @@ const info = require('./info');
 
 module.exports = (activities) => {
   return async (req, res) => {
+    process.env.HOST = req.headers.host;
+
     const name = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length).toLowerCase();
 
     if (name === 'keepalive') {

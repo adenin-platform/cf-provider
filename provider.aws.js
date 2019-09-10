@@ -11,6 +11,8 @@ const info = require('./info');
 
 module.exports = (activities) => {
   return async (event) => {
+    process.env.HOST = event.headers.host;
+
     const pathParameters = event.pathParameters;
 
     if (pathParameters && pathParameters.activity && pathParameters.activity.toLowerCase() === 'keepalive') {

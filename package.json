@@ -12,8 +12,8 @@
   "author": "olliejm",
   "main": "index.js",
   "dependencies": {
-    "@adenin/cf-activity": "^3.0.0",
-    "@adenin/cf-logger": "^1.6.1",
+    "@adenin/cf-activity": "^3.1.0",
+    "@adenin/cf-logger": "^1.7.0",
     "js-yaml": "^3.13.1"
   }
 }
