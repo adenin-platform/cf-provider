@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (header) => {
-  if (header['x-api-key']) {
+  if (header && header['x-api-key']) {
     if (!process.env.API_KEYS) return false;
 
     const keys = process.env.API_KEYS.split(';');

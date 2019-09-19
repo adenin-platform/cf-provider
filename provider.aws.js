@@ -11,7 +11,7 @@ const info = require('./info');
 
 module.exports = (activities) => {
   return async (event) => {
-    process.env.HOST = event.headers.host;
+    process.env.HOST = event.headers.host + event.path;
 
     const pathParameters = event.pathParameters;
 
@@ -53,7 +53,7 @@ module.exports = (activities) => {
       };
     }
 
-    if (!body.Request || !body.Context) {
+    if (!body || !body.Request || !body.Context) {
       logger.error('Invalid request body');
 
       body.Response = {

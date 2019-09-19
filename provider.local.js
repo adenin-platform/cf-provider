@@ -39,7 +39,7 @@ module.exports = (activities) => {
           ErrorText: 'Access key missing or invalid'
         }
       };
-    } else if (!body.Request || !body.Context) {
+    } else if (!body || !body.Request || !body.Context) {
       logger.error('Invalid request body');
 
       body.Response = {

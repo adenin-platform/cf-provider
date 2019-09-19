@@ -1,7 +1,6 @@
 'use strict';
 
 const fs = require('fs');
-const {resolve, sep} = require('path');
 const {promisify} = require('util');
 
 const readdir = promisify(fs.readdir);
@@ -23,10 +22,7 @@ module.exports = async () => {
     }
   }
 
-  const path = resolve('./');
-
   return {
-    type: path.substring(path.lastIndexOf(sep) + 1, path.length),
     definition: yaml.safeLoad(await readFile('./_definition.yaml')),
     activities: activities
   };

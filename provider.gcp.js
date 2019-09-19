@@ -11,7 +11,7 @@ const info = require('./info');
 
 module.exports = (activities) => {
   return async (req, res) => {
-    process.env.HOST = req.headers.host;
+    process.env.HOST = req.url;
 
     const name = req.path.substring(req.path.lastIndexOf('/') + 1, req.path.length).toLowerCase();
 
@@ -37,7 +37,7 @@ module.exports = (activities) => {
       };
 
       res.status(401).send(body);
-    } else if (!body.Request || !body.Context) {
+    } else if (!body || !body.Request || !body.Context) {
       logger.error('Invalid request body');
 
       body.Response = {
