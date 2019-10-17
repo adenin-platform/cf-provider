@@ -31,11 +31,11 @@ module.exports = (activities) => {
       return;
     }
 
-    const authorized = authenticate(context.req.headers);
+    const authenticated = authenticate(context.req.headers);
     const body = context.req.body;
 
-    if (!authorized) {
-      logger.error('Unauthorized request');
+    if (!authenticated) {
+      logger.error('Unauthenticated request: API key missing or invalid');
 
       body.Response = {
         ErrorCode: 401,

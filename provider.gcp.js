@@ -23,11 +23,11 @@ module.exports = (activities) => {
 
     if (name === '_info') res.status(200).send(await info());
 
-    const authorized = authenticate(req.headers);
+    const authenticated = authenticate(req.headers);
     const body = req.body;
 
-    if (!authorized) {
-      logger.error('Unauthorized request');
+    if (!authenticated) {
+      logger.error('Unauthenticated request: API key missing or invalid');
 
       body.Response = {
         ErrorCode: 401,

@@ -33,16 +33,16 @@ module.exports = (activities) => {
       };
     }
 
-    const authorized = authenticate(event.headers);
+    const authenticated = authenticate(event.headers);
     const body = JSON.parse(event.body);
 
-    if (!authorized) {
-      logger.error('Unauthorized request');
+    if (!authenticated) {
+      logger.error('Unauthenticated request: API key missing or invalid');
 
       body.Response = {
         ErrorCode: 401,
         Data: {
-          ErrorText: 'Access key missing or invalid'
+          ErrorText: 'API key missing or invalid'
         }
       };
 
