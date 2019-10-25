@@ -8,6 +8,7 @@ const {initialize} = require('@adenin/cf-activity');
 
 const authenticate = require('./auth');
 const info = require('./info');
+const settings = require('./settings');
 
 module.exports = (activities) => {
   return async (event) => {
@@ -30,6 +31,14 @@ module.exports = (activities) => {
         isBase64Encoded: false,
         statusCode: 200,
         body: await info()
+      };
+    }
+
+    if (pathParameters && pathParameters.activity && pathParameters.activity.toLowerCase() === '_settings') {
+      return {
+        isBase64Encoded: false,
+        statusCode: 200,
+        body: await settings()
       };
     }
 

@@ -11,6 +11,7 @@ const {initialize} = require('@adenin/cf-activity');
 
 const authenticate = require('./auth');
 const info = require('./info');
+const settings = require('./settings');
 
 module.exports = (activities) => {
   return async (ctx) => {
@@ -24,6 +25,11 @@ module.exports = (activities) => {
 
     if (ctx.params && ctx.params.activity && ctx.params.activity.toLowerCase() === '_info') {
       ctx.body = await info();
+      return;
+    }
+
+    if (ctx.params && ctx.params.activity && ctx.params.activity.toLowerCase() === '_settings') {
+      ctx.body = await settings();
       return;
     }
 

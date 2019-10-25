@@ -8,6 +8,7 @@ const {initialize} = require('@adenin/cf-activity');
 
 const authenticate = require('./auth');
 const info = require('./info');
+const settings = require('./settings');
 
 module.exports = (activities) => {
   return async (req, res) => {
@@ -22,6 +23,7 @@ module.exports = (activities) => {
     }
 
     if (name === '_info') res.status(200).send(await info());
+    if (name === '_settings') res.status(200).send(await settings());
 
     const authenticated = authenticate(req.headers);
     const body = req.body;
