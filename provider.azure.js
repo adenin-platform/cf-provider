@@ -16,6 +16,7 @@ module.exports = (activities) => {
     const body = context.req.body;
 
     try {
+      process.chdir(context.executionContext.functionDirectory);
       process.env.HOST = context.req.url;
 
       mapConsole(context);
