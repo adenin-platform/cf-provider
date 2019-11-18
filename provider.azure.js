@@ -3,7 +3,7 @@
 
 global.logger = require('@adenin/cf-logger');
 
-const {resolve} = require('path');
+const {resolve, sep} = require('path');
 
 const {initialize} = require('@adenin/cf-activity');
 
@@ -16,7 +16,7 @@ module.exports = (activities) => {
     const body = context.req.body;
 
     try {
-      process.chdir(context.executionContext.functionDirectory);
+      process.chdir(context.executionContext.functionDirectory.replace(`${sep}activities`, ''));
       process.env.HOST = context.req.url;
 
       mapConsole(context);
