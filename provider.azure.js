@@ -16,6 +16,8 @@ module.exports = (activities) => {
     const body = context.req.body;
 
     try {
+      // need to ensure node current working directory is wwwroot
+      // azure provided functionDirectory is .../wwwroot/activities, so replace '/activities' with empty string
       process.chdir(context.executionContext.functionDirectory.replace(`${sep}activities`, ''));
       process.env.HOST = context.req.url;
 
