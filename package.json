@@ -1,6 +1,6 @@
 {
   "name": "@adenin/cf-provider",
-  "version": "2.8.5",
+  "version": "2.8.6",
   "description": "Detect current serverless function environment and return correct middleware",
   "repository": {
     "type": "git",
